@@ -1,0 +1,22 @@
+# Netlify build settings for the conference app.
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+# The service worker must never be cached, so updates reach phones quickly.
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Hash routes (#/agenda) mean no SPA redirect is needed, and /api/* goes
+# straight to netlify/functions/api.mjs.
